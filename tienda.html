@@ -1,0 +1,177 @@
+<!----
+
+
+¡Perfecto! Vamos a organizar todo lo que estás pidiendo paso a paso para que quede claro y puedas implementarlo sin líos. Te propongo un flujo **HTML + JSON + JS** que funcione sin backend y que luego se pueda enviar por WhatsApp como mensaje predeterminado.
+
+---
+
+## 1️⃣ Estructura HTML sugerida
+
+```html---->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Huachu Pets</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <h1>Huachu Pets</h1>
+  </header>
+
+  <!-- NAVBAR -->
+  <nav>
+    <ul>
+      <li><a href="#">Inicio</a></li>
+      <li><a href="#">Productos</a></li>
+      <li><a href="#">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- LAYOUT -->
+  <div class="layout">
+    <!-- ASIDE IZQUIERDO -->
+    <aside id="filtros">
+      <h3>Filtros</h3>
+      <!-- filtros opcionales -->
+    </aside>
+
+    <!-- MAIN -->
+    <main id="productos">
+      <!-- Aquí se generarán las cards dinámicamente -->
+    </main>
+
+    <!-- ASIDE DERECHO / CARRITO -->
+    <aside id="carrito">
+      <h3>Carrito de compras</h3>
+      <div id="items-carrito"></div>
+      <p>Total: $<span id="total">0</span></p>
+      <a id="enviar-whatsapp" href="#" target="_blank">Enviar por WhatsApp</a>
+    </aside>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Huachu Pets</p>
+  </footer>
+
+  <script src="productos.js"></script>
+  <script src="main.js">
+    const main = document.getElementById("productos");
+const carritoDiv = document.getElementById("items-carrito");
+const totalSpan = document.getElementById("total");
+const whatsappBtn = document.getElementById("enviar-whatsapp");
+
+let carrito = [];
+
+// Generar cards
+productos.forEach(producto => {
+  const card = document.createElement("div");
+  card.classList.add("card");
+  card.innerHTML = `
+    <img id="img-${producto.id}" src="${producto.img}" alt="${producto.titulo}">
+    <h4 id="titulo-${producto.id}">${producto.titulo}</h4>
+    <p id="desc-${producto.id}">${producto.descripcion}</p>
+    <p id="precio-${producto.id}">$${producto.precio}</p>
+    <input type="number" id="cantidad-${producto.id}" value="1" min="1">
+    <button onclick="agregarCarrito(${producto.id})">Agregar al carrito</button>
+  `;
+  main.appendChild(card);
+});
+
+// Función agregar al carrito
+function agregarCarrito(id) {
+  const producto = productos.find(p => p.id === id);
+  const cantidad = parseInt(document.getElementById(`cantidad-${id}`).value);
+
+  const itemExistente = carrito.find(i => i.id === id);
+  if (itemExistente) {
+    itemExistente.cantidad += cantidad;
+  } else {
+    carrito.push({...producto, cantidad});
+  }
+
+  actualizarCarrito();
+}
+
+// Actualizar carrito visual
+function actualizarCarrito() {
+  carritoDiv.innerHTML = "";
+  let total = 0;
+  carrito.forEach(item => {
+    total += item.precio * item.cantidad;
+    carritoDiv.innerHTML += `
+      <p>${item.titulo} x ${item.cantidad} = $${item.precio * item.cantidad}</p>
+    `;
+  });
+  totalSpan.textContent = total;
+
+  // Actualizar link de WhatsApp
+  let mensaje = "Hola! Quiero comprar:\n";
+  carrito.forEach(item => {
+    mensaje += `${item.titulo} x${item.cantidad} - $${item.precio * item.cantidad}\n${item.img}\n`;
+  });
+  mensaje += `Total: $${total}`;
+  whatsappBtn.href = `https://wa.me/521TU_NUMERO?text=${encodeURIComponent(mensaje)}`;
+}
+  </script>
+</body>
+</html>
+
+
+<!---
+```
+
+---
+
+## 2️⃣ Ejemplo de JSON (`productos.js`)
+
+```js
+const productos = [
+  {
+    id: 1,
+    titulo: "Collar para perro",
+    descripcion: "Collar ajustable, color azul",
+    precio: 150,
+    img: "https://raw.githubusercontent.com/huachu-pets/portal/main/img/collar.jpg"
+  },
+  {
+    id: 2,
+    titulo: "Juguete de gato",
+    descripcion: "Ratón de tela con catnip",
+    precio: 80,
+    img: "https://raw.githubusercontent.com/huachu-pets/portal/main/img/juguete-gato.jpg"
+  }
+];
+
+
+<!----
+
+```
+
+---
+
+## 3️⃣ JS para generar cards y carrito (`main.js`)
+
+```js
+
+```
+
+---
+
+### ✅ Detalles importantes que cubrimos
+
+1. **Cards dinámicas** con imagen, título, descripción, precio, cantidad y botón.
+2. **ID únicos** en cada card (`img-1`, `titulo-1`, `desc-1`, etc.).
+3. **Carrito de compras** visible en aside derecho, con total calculado automáticamente.
+4. **WhatsApp prellenado** con los productos seleccionados, cantidad, precio y links de imagen.
+5. Funciona **sin backend**, todo con JSON y JS.
+
+---
+
+Si quieres, puedo hacer la **versión final con CSS ya listo** para que las cards se vean bonitas y el layout completo tipo portal.
+
+¿Quieres que haga eso ahora?
